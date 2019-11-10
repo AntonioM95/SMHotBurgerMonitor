@@ -1,7 +1,18 @@
 const express = require('express');
 const app = express();
-const port = 3000;
+const port = 3001;
 const fs = require('fs');
+
+const Monitoring = {
+    total: 0,
+    topSeller: null,
+    requestCount: 0,
+    lastRequestStatus: null,
+    lastRequestTime: null
+}
+
+
+
 
 app.get('/gettotal', (req, res) => {
     fs.readFile('./Monitoring/monitoringlogs.log', 'utf8', (err,data) => {
