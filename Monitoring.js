@@ -18,7 +18,7 @@ const Monitoring = {
 }
 
 getLastTimeRequest = () => {
-    const data = fs.readFileSync('../HotBurger/Monitoring/monitoringlogs.log', 'utf8');
+    const data = fs.readFileSync('../HotBurger/Monitoring/monitoring.log', 'utf8');
     var lines = data.split("\n");
     lastLine = lines[lines.length - 2].split(" ");
     console.log(lines, lastLine);
@@ -26,7 +26,7 @@ getLastTimeRequest = () => {
     console.log(Monitoring.lastRequestTime);
 }
 getTotal = () => {
-    const data = fs.readFileSync('../HotBurger/Monitoring/monitoringlogs.log', 'utf8');
+    const data = fs.readFileSync('../HotBurger/Monitoring/monitoring.log', 'utf8');
     var lines = data.split("\n");
     console.log(lines.length);
     if(lines.length > Monitoring.lastLine){
@@ -44,7 +44,7 @@ getTotal = () => {
 
 
 getTopSeller = () => {
-    const data = fs.readFileSync('./Monitoring/monitoringlogs.log', 'utf8');
+    const data = fs.readFileSync('./Monitoring/monitoring.log', 'utf8');
     var lines = data.split("\n");
     if(lines.length > Monitoring.lastLine){
         lines.forEach((line) => {
@@ -85,7 +85,7 @@ app.get('/getrequestcount', (req, res) => {
 );
 
 app.get('/getlastrequeststatus', (req, res) => {
-    res.send('The last request was: ');
+    res.send('The last request status was: ');
    }
 );
 
