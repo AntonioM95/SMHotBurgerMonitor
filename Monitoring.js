@@ -5,34 +5,82 @@ const fs = require('fs');
 
 const Monitoring = {
     total: 0,
-    topSeller: null,
+    topSeller: {
+        Soda: 0,
+        Hamburger: 0,
+        Hotdog: 0,
+        Cookie: 0
+    },
     requestCount: 0,
     lastRequestStatus: null,
-    lastRequestTime: null
+    lastRequestTime: null,
+    lastLine: 0 
+}
+
+getLastTimeRequest = () => {
+    const data = fs.readFileSync('../HotBurger/Monitoring/monitoringlogs.log', 'utf8');
+    var lines = data.split("\n");
+    lastLine = lines[lines.length - 2].split(" ");
+    console.log(lines, lastLine);
+    Monitoring.lastRequestTime = lastLine[lastLine.length - 2];
+    console.log(Monitoring.lastRequestTime);
+}
+getTotal = () => {
+    const data = fs.readFileSync('../HotBurger/Monitoring/monitoringlogs.log', 'utf8');
+    var lines = data.split("\n");
+    console.log(lines.length);
+    if(lines.length > Monitoring.lastLine){
+        lines.forEach((line) => {
+        const log = line.split(" ");
+        if(log[3] === "Purchase") {
+            const cost = log[10].replace('$','');
+            const price = log[8] * cost;
+            Monitoring.total += price;
+        }
+        });
+    }
+    Monitoring.lastLine = lines.length;
 }
 
 
+getTopSeller = () => {
+    const data = fs.readFileSync('./Monitoring/monitoringlogs.log', 'utf8');
+    var lines = data.split("\n");
+    if(lines.length > Monitoring.lastLine){
+        lines.forEach((line) => {
+        const log = line.split(" ");
+         if(log[3] === "Purchase") {
+            const item = Object.keys(Monitoring.topSeller).filter((key, index) => {
+                if(key.toString().toLowerCase() === log[6].toString().toLowerCase()){
+                    return key
+                };
+            });
+            
+            Monitoring.topSeller[item] += log[8];
+           }
+         });
+    }
+    Monitoring.lastLine = lines.length;
 
-
+}
 app.get('/gettotal', (req, res) => {
-    fs.readFile('./Monitoring/monitoringlogs.log', 'utf8', (err,data) => {
-        if(err){
-            console.log(err);
-            throw err;
-        }
-        res.send(data.toString());
-    //res.send('The total is: ');
-   });
+    getTotal();
+    const sales = `Total Earnings $${Monitoring.total.toString()}`
+    res.send(sales);
 }
 );
 
+
 app.get('/gettopseller', (req, res) => {
-    res.send('The top seller is: ');
+
+    getTopSeller();
+    //const topSeller = `Top Seller is $${Monitoring.total.toString()}`
+    res.json(Monitoring.topSeller);
    }
 );
 
 app.get('/getrequestcount', (req, res) => {
-    res.send('The request count is: ');
+    res.send(`The request count is: ${Monitoring.lastLine}`);
    }
 );
 
@@ -41,8 +89,11 @@ app.get('/getlastrequeststatus', (req, res) => {
    }
 );
 
+
 app.get('/getlastrequesttime', (req, res) => {
-    res.send('The last request time is: ');
+    getLastTimeRequest();
+
+    res.send(`The last request time is: ${Monitoring.lastRequestTime}`);
    }
 );
 
