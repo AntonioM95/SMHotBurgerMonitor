@@ -18,7 +18,7 @@ const Monitoring = {
 }
 
 getLastTimeRequest = () => {
-    const data = fs.readFileSync('../HotBurger/Monitoring/monitoring.log', 'utf8');
+    const data = fs.readFileSync('./Monitoring/monitoring.log', 'utf8');
     var lines = data.split("\n");
     lastLine = lines[lines.length - 2].split(" ");
     console.log(lines, lastLine);
@@ -26,7 +26,7 @@ getLastTimeRequest = () => {
     console.log(Monitoring.lastRequestTime);
 }
 getTotal = () => {
-    const data = fs.readFileSync('../HotBurger/Monitoring/monitoring.log', 'utf8');
+    const data = fs.readFileSync('./Monitoring/monitoring.log', 'utf8');
     var lines = data.split("\n");
     console.log(lines.length);
     if(lines.length > Monitoring.lastLine){
