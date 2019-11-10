@@ -1,11 +1,18 @@
 const express = require('express');
 const app = express();
-const port = 5000;
+const port = 3000;
 const fs = require('fs');
 
 app.get('/gettotal', (req, res) => {
-    res.send('The total is: ');
-   }
+    fs.readFile('./Monitoring/monitoringlogs.log', 'utf8', (err,data) => {
+        if(err){
+            console.log(err);
+            throw err;
+        }
+        res.send(data.toString());
+    //res.send('The total is: ');
+   });
+}
 );
 
 app.get('/gettopseller', (req, res) => {
