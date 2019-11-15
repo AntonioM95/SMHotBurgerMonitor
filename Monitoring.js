@@ -64,6 +64,7 @@ getTopSeller = () => {
 
 }
 app.get('/gettotal', (req, res) => {
+    console.log("getting total");
     getTotal();
     const sales = `Total Earnings $${Monitoring.total.toString()}`
     res.send(sales);
